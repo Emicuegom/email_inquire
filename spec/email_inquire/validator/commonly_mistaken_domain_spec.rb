@@ -13,10 +13,12 @@ RSpec.describe EmailInquire::Validator::CommonlyMistakenDomain do
         .and be_valid
     end
 
-    it "returns an hint response for a matching address" do
-      expect(described_class.validate("john@google.com")).to be_a(EmailInquire::Response)
-        .and be_hint
-        .and have_attributes(replacement: "john@gmail.com")
+    described_class::MISTAKES.each do |key, value|
+      it "returns an hint (#{value}) response for a matching address with (#{key})" do
+        expect(described_class.validate("john@#{key}")).to be_a(EmailInquire::Response)
+          .and be_hint
+          .and have_attributes(replacement: "john@#{value}")
+      end
     end
   end
 end
