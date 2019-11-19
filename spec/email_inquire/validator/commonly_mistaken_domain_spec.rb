@@ -14,10 +14,14 @@ RSpec.describe EmailInquire::Validator::CommonlyMistakenDomain do
     end
 
     described_class::MISTAKES.each do |key, value|
-      it "returns an hint (#{value}) response for a matching address with (#{key})" do
-        expect(described_class.validate("john@#{key}")).to be_a(EmailInquire::Response)
+      context 'mistakes' do
+        let!(:key_to_s) { key.to_s.gsub('(?-mix:','').gsub('\\','').gsub(')','') }
+
+        it "returns an hint (#{value}) response for a matching address with (#{key})" do
+          expect(described_class.validate("john@#{key_to_s}")).to be_a(EmailInquire::Response)
           .and be_hint
           .and have_attributes(replacement: "john@#{value}")
+        end
       end
     end
   end
